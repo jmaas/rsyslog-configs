@@ -1,4 +1,7 @@
 
+logmanagement-rsyslog
+---------------------
+
 This repository contains rsyslog configuration files useful in many logmanagement environments.
 The main goal is to have a set of easily reusable configuration files that are tested, proven and well documented. 
 
