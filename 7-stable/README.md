@@ -40,12 +40,24 @@ Several forwaring methods are available, just grab the relevant ``.conf`` config
 
 Use-cases
 =========
-Different use-cases can be easily implemented by combining several of the above configuration files. This section simply describes several example use-cases, and how to implement them using the provided configuration examples.
+Different use-cases can easily be implemented by combining several of the above configuration files. This section simply describes several example use-cases, and how to implement them using the provided configuration examples.
 
-| Use-case description          | Input                 | Output                | Forward               |
-| :---------------------------- | :-------------------- | :-------------------- | :-------------------- |
-| Only local logging            | journald, uxsock      | file                  | n/a                   | 
+| Use-case | Use-case description               | Input                 | Output                | Forward               |
+| :------- | :--------------------------------- | :-------------------- | :-------------------- | :-------------------- |
+| [1](#1)  | local logging                      | journald, uxsocket    | file                  | n/a                   | 
+| [2](#2)  | local logging + legacy forwarding  | journald, uxsocket    | file                  | syslog_udp            | 
 
+
+<a name="1">
+1. local logging
+</a>
+jadieja
+
+
+<a name="2">
+2. local logging + legacy forwarding
+</a>
+bladiebla
 
 
 Setting up TLS
