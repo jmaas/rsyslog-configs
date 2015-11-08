@@ -42,8 +42,9 @@ Use-cases
 =========
 Different use-cases can be easily implemented by combining several of the above configuration files. This section simply describes several example use-cases, and how to implement them using the provided configuration examples.
 
-Use-case description - Input - Output - Forward
-Only local logging | journald, uxsock | file | n/a
+| Use-case description | Input            | Output          | Forward          |
+| -------------------- | ---------------- | --------------- | ---------------- |
+| Only local logging   | journald, uxsock | file            | n/a              | 
 
 
 
