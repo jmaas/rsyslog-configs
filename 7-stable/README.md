@@ -1,5 +1,5 @@
 
-These configurations have only been tested with the rsyslog packages as provided with RHEL/CentOS 7.x.
+These configurations have only been tested with the stock rsyslog packages as provided with RHEL/CentOS 7.x. The use of the official distro packages is recommended since they are the most stable in regards to versioning and thus the configuration options. Tracking the upstream repo requires you to test your conffiguration is the upstream versions keeps bumping.
 
 Configuration files
 ===================
@@ -42,22 +42,24 @@ Use-cases
 =========
 Different use-cases can easily be implemented by combining several of the above configuration files. This section simply describes several example use-cases, and how to implement them using the provided configuration examples.
 
-| Use-case | Use-case description               | Input                 | Output                | Forward               |
-| :------- | :--------------------------------- | :-------------------- | :-------------------- | :-------------------- |
-| [1](#1)  | local logging                      | journald, uxsocket    | file                  | n/a                   | 
-| [2](#2)  | local logging + legacy forwarding  | journald, uxsocket    | file                  | syslog_udp            | 
+| Use-case | Short description                      | Input                 | Output                | Forward               |
+| :------- | :------------------------------------- | :-------------------- | :-------------------- | :-------------------- |
+| [1](#1)  | local logging                          | journald, uxsocket    | file                  | n/a                   | 
+| [2](#2)  | local logging + traditional forwarding | journald, uxsocket    | file                  | syslog_udp            | 
 
 
 <a name="1">
 1. local logging
+----------------
+This configuration gathers log from the systemd journal and the traditional syslog socket and writes it's output to local files only. This setup is most common for environments where central logging is not required (eg. your personal laptop).
 </a>
-jadieja
 
 
 <a name="2">
-2. local logging + legacy forwarding
+2. local logging + traditional forwarding
+-----------------------------------------
+Like the first use-case but also sends it's log using the traditional syslog forwarding method (syslog over UDP). Forwarding syslog over UDP is the most unreliable forwarding method available. It's also the most common and best supported forwarding method, if your log server supports better protocols like TCP or TLS use that instead.
 </a>
-bladiebla
 
 
 Setting up TLS
