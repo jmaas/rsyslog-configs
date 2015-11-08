@@ -1,5 +1,5 @@
 logmanagement-rsyslog
-+++++++++++++++++++++
+=====================
 
 This repository contains rsyslog configuration files useful in many logmanagement environments. The goal is to have a set of easily reusable configuration files that are tested, proven and well documented. For these configurations to be really useful in real world environments sufficient attention to issues related to confidentiality, integrity, authenticity and scalability have been given.
 
@@ -99,6 +99,10 @@ This use-case implements local loggin with secure (TLS) forwarding. This method 
 
 Setting up TLS
 ==============
+When you need some of the TLS features of rsyslog please follow these instructions to create the required certificates.
+
+Setup a CA
+----------
 This section describes how to create a Certificate Authority (CA) and server certificate to use with TLS transport methods. To begin with, you need to generate the root CA key, this is what signs all issued certificates.
 
     openssl genrsa -out rootCA.key 4096
@@ -108,7 +112,8 @@ Generate the self-signed root CA certificate, using the previousely generated ke
 
     openssl req -x509 -new -nodes -key rootCA.key -days 365 -out rootCA.crt
 
-
+Setup host certificate
+----------------------
 Once you have the root CA certificate generated, you can use that to generate additional SSL certificates for systems and/or services. We can now create the certificate for the rsyslog service on this system, but first we need to create a key.
 
     openssl genrsa -out host.key 2048
@@ -123,4 +128,6 @@ The next step is to take the CSR and generate a signed certificate using the roo
 
     openssl x509 -req -in host.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out host.crt -days 365
 
-
+rsyslog TLS configuration
+-------------------------
+Now that you have the required certificates, please edit the global configuration file (``/etc/rsyslog.conf``) to adjust for the names & locations of your certificates.
