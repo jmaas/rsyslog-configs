@@ -31,7 +31,7 @@ Several output methods are available, just grab the relevant ``.conf`` configura
 
 Forward
 -------
-Several forwaring methods are available, just grab the relevant ``.conf`` configuration files and drop them into the ``/etc/rsyslog.d/`` directory.
+Several forwarding methods are available, just grab the relevant ``.conf`` configuration files and drop them into the ``/etc/rsyslog.d/`` directory.
 
 *   syslog / udp - legacy syslog forwarding
 *   syslog / tcp - legacy syslog forwarding
@@ -46,6 +46,8 @@ Different use-cases can easily be implemented by combining several of the above 
 | :------- | :------------------------------------- | :-------------------- | :-------------------- | :-------------------- |
 | [1](#1)  | local logging                          | journald, uxsocket    | file                  | n/a                   | 
 | [2](#2)  | local logging + traditional forwarding | journald, uxsocket    | file                  | syslog_udp            | 
+| [3](#3)  | local logging + improved forwarding    | journald, uxsocket    | file                  | syslog_tcp            | 
+| [4](#4)  | local logging + secure forwarding      | journald, uxsocket    | file                  | syslog_tls            | 
 
 
 <a name="1">
@@ -60,6 +62,19 @@ This configuration gathers log from the systemd journal and the traditional sysl
 -----------------------------------------
 Like the first use-case but also sends it's log using the traditional syslog forwarding method (syslog over UDP). Forwarding syslog over UDP is the most unreliable forwarding method available. It's also the most common and best supported forwarding method, if your log server supports better protocols like TCP or TLS use that instead.
 </a>
+
+<a name="3">
+3. local logging + improved forwarding
+--------------------------------------
+Like the previous use-case but using TCP as the forwarding protocol. This method has a higher level of reliability because rsyslog can now detect when the destination is unavailable. In this case log messages will be queued and resend when the destination becomes available again. Although a lot better than using UDP; but still there's no 100% guarentee that messages can't be lost.
+</a>
+
+<a name="4">
+4. local logging + secure forwarding
+------------------------------------
+This use-case implements local loggin with secure (TLS) forwarding. This method of forwarding is pretty good when dealing with strict requirements regarding confidentiality, integrity and authenticity (CIA) of logs. Unfortunately this method does also suffer from the same limitations as the TCP forwarding use-case, there's still no guarantee that messages can't be lost.
+</a>
+
 
 
 Setting up TLS
