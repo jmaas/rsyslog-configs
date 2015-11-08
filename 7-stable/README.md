@@ -44,7 +44,7 @@ Different use-cases can be easily implemented by combining several of the above 
 
 | Use-case description          | Input                 | Output                | Forward               |
 | :---------------------------- | :-------------------- | :-------------------- | :-------------------- |
-| Only local logging            | journald, uxsock      | file                  | n/a                   | 
+| Only local logging            | [journald](rsyslog.d/input_journald.conf], uxsock      | file                  | n/a                   | 
 
 
 
