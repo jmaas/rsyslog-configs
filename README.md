@@ -1,12 +1,12 @@
 logmanagement-rsyslog
 =====================
 
-This repository contains rsyslog configuration files useful in many logmanagement environments. The goal is to have a set of easily reusable configuration files that are tested, proven and well documented. For these configurations to be really useful in real world environments sufficient attention to issues related to confidentiality, integrity, authenticity and scalability has been given.
+This repository contains rsyslog configuration files useful in many logmanagement environments. The goal is to have a set of easily reusable configuration files that are tested, proven and well documented. For these configurations to be really useful in real world environments sufficient attention to issues related to security (CIA triangle), reliability  and scalability has been given.
 
 
 Contributing
 ============
-Contributing configuration samples and/or use-cases is encouraged! Just fork this repository and send me a pull request.
+Contributing configuration samples and/or use-cases is encouraged and much appreciated! Just fork this repository and send me a pull request.
 
 
 Versions
@@ -31,16 +31,16 @@ How does it work?
 =================
 The rsyslog configuration has been split into several files. Hopefuly, this makes it easy to just pick the components you need to implement your specific use-case. Just grab the ``.conf`` files you need and drop them into the appropiate location; the global configuration file (``rsyslog.conf``) should go into ``/etc/`` all other files should go into ``/etc/rsyslog.d/``. Make sure you first verify your configuration (``rsyslogd -N2``) before you reload/restart rsyslogd.
 
-*   syslog.conf - the global configuration file
-*   input_*.conf - input configuration files
-*   output_*.conf - output configuration files
+*   rsyslog.conf - the global configuration file
+*   input_*.conf - input configuration files (receivers)
+*   output_*.conf - output configuration files (actions)
 *   forward_*.conf - forwarding configuration files
 
 Input
 -----
 
 *   journald - systemd's journal log
-*   relp - reliable log transfer protocol
+*   syslog / relp - reliable log transfer protocol
 *   syslog / tcp - legacy syslog over tcp
 *   syslog / tls - syslog over tls tunnel
 *   syslog / udp - traditional syslog over udp
@@ -49,7 +49,8 @@ Input
 Output
 ------
 
-*   file - write log to local files
+*   file_client - write log to local files, log split in multiple files based on facility
+*   file_server - write log to local files, log split in multiple files based on hostname/ip
 
 Forward
 -------
@@ -57,6 +58,7 @@ Forward
 *   syslog / udp - traditional syslog forwarding
 *   syslog / tcp - improved syslog forwarding
 *   syslog / tls - secure syslog forwarding
+*   syslog / relp - secure and reliable syslog forwarding
 
 
 Use-cases
