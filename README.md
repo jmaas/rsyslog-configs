@@ -63,12 +63,14 @@ Use-cases
 =========
 Different use-cases can easily be implemented by combining several of the above configuration files. This section simply describes several example use-cases, and how to implement them using the provided configuration examples.
 
-| Use-case | Short description                      | Input                 | Output                | Forward               |
-| :------- | :------------------------------------- | :-------------------- | :-------------------- | :-------------------- |
-| [1](#1)  | local logging                          | journald, uxsocket    | file                  | n/a                   | 
-| [2](#2)  | local logging + traditional forwarding | journald, uxsocket    | file                  | syslog_udp            | 
-| [3](#3)  | local logging + improved forwarding    | journald, uxsocket    | file                  | syslog_tcp            | 
-| [4](#4)  | local logging + secure forwarding      | journald, uxsocket    | file                  | syslog_tls            | 
+| Use-case | Short description                      | Input                                                                 | Output                | Forward               |
+| :------- | :------------------------------------- | :---------------------------------------------------------------------| :-------------------- | :-------------------- |
+| [1](#1)  | local logging                          | journald, uxsocket                                                    | file_client           | n/a                   | 
+| [2](#2)  | local logging + traditional forwarding | journald, uxsocket                                                    | file_client           | syslog_udp            | 
+| [3](#3)  | local logging + improved forwarding    | journald, uxsocket                                                    | file_client           | syslog_tcp            | 
+| [4](#4)  | local logging + secure forwarding      | journald, uxsocket                                                    | file_client           | syslog_tls            | 
+| [5](#5)  | local logging + reliable forwarding    | journald, uxsocket                                                    | file_client           | syslog_relp           | 
+| [6](#6)  | log collector + reliable forwarding    | journald, uxsocket, syslog_udp, syslog_tcp, syslog_tls, syslog_relp   | n/a                   | syslog_relp           | 
 
 
 <a name="1">
@@ -76,7 +78,6 @@ Different use-cases can easily be implemented by combining several of the above 
 ----------------
 This configuration gathers log from the systemd journal and the traditional syslog socket and writes it's output to local files only. This setup is most common for environments where central logging is not required (eg. your personal laptop).
 </a>
-
 
 <a name="2">
 2. local logging + traditional forwarding
@@ -93,8 +94,18 @@ Like the previous use-case but using TCP as the forwarding protocol. This method
 <a name="4">
 4. local logging + secure forwarding
 ------------------------------------
-This use-case implements local loggin with secure (TLS) forwarding. This method of forwarding is pretty good when dealing with strict requirements regarding confidentiality, integrity and authenticity (CIA) of logs. Unfortunately this method does also suffer from the same limitations as the TCP forwarding use-case, there's still no guarantee that messages can't be lost.
+This use-case implements local logging with secure (TLS) forwarding. This method of forwarding is pretty good when dealing with strict requirements regarding confidentiality, integrity and authenticity (CIA) of logs. Unfortunately this method does also suffer from the same limitations as the TCP forwarding use-case, there's still no guarantee that messages can't be lost.
 </a>
+
+<a name="5">
+5. local logging + reliable forwarding
+--------------------------------------
+This use-case implements local logging with reliable forwarding (RELP over TLS). This method of forwarding is the most reliable in terms of log delivery (RELP) as well as confidentiality, integrity and authenticity (TLS). This is the recommended configuration when you need to forward logs to a central server.
+
+<a name="6">
+6. log collector + reliable forwarding
+--------------------------------------
+This use-case implements a log collector server which can receive syslog on UDP, TCP, TLS and RELP. Additionally it forwards all log to a central log server using RELP over TLS.
 
 
 Setting up TLS
