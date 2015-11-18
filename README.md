@@ -104,46 +104,6 @@ This use-case implements local logging with reliable forwarding (RELP over TLS).
 This use-case implements a log collector server which can receive syslog on UDP, TCP, TLS and RELP. Additionally it forwards all log to a central log server using RELP over TLS.
 
 
-Custom use-cases
-----------------
-The rsyslog configuration has been split into several files. Hopefuly, this makes it easy to just pick the components you need to implement your specific use-case. Just grab the ``.conf`` files you need and drop them into the appropiate location; the global configuration file (``rsyslog.conf``) should go into ``/etc/`` all other files should go into ``/etc/rsyslog.d/``. Make sure you first verify your configuration (``rsyslogd -N2``) before you reload/restart rsyslogd.
-
-*   rsyslog.conf - the global configuration file
-*   input_*.conf - input configuration files (receivers)
-*   output_*.conf - output configuration files (actions)
-*   forward_*.conf - forwarding configuration files
-
-Input
------
-
-| Ref.      | Filename                     | Description                    |
-| :-------- | :----------------------------| :------------------------------|
-| i-uxs     | input_uxsocket.conf          | Traditional syslog socket      |
-| i-sys     | input_journald.conf          | Systemd's journal              |
-| i-udp     | input_syslog_udp.conf        | Syslog over UDP                |
-| i-tcp     | input_syslog_tcp.conf        | Syslog over TCP                |
-| i-tls     | input_syslog_tls.conf        | Syslog over TLS                |
-| i-relp    | input_syslog_relp.conf       | Syslog over RELP/TLS           |
-
-Output
-------
-
-| Ref.    | Filename                     | Description                          |
-| :-------| :----------------------------| :------------------------------------|
-| o-fc    | output_file_client.conf      | Split log based on facility          |
-| o-fs    | output_file_server.conf      | Split log based on date and hostname |
-
-Forward
--------
-
-| Ref.      | Filename                     | Description                    |
-| :-------- | :----------------------------| :------------------------------|
-| f-udp     | forward_syslog_udp.conf      | Syslog over UDP                |
-| f-tcp     | forward_syslog_tcp.conf      | Syslog over TCP                |
-| f-tls     | forward_syslog_tls.conf      | Syslog over TLS                |
-| f-relp    | forward_syslog_relp.conf     | Syslog over RELP/TLS           |
-
-
 Setting up TLS
 ==============
 When you need some of the TLS features of rsyslog please follow these instructions to create the required certificates.
