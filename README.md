@@ -59,7 +59,7 @@ Predefined use-cases
 --------------------
 This section simply describes several predefined (example) use-cases, and how to implement them using the provided configuration examples.
 
-| Use-case | Short description                      | Input reference                             | Output reference      | Forward reference     |
+| Use-case | Short description                      | Input                                       | Output                | Forward               |
 | :------- | :------------------------------------- | :-------------------------------------------| :-------------------- | :-------------------- |
 | [1](#1)  | local logging                          | i-uxs, i-sys                                | o-fc                  | n/a                   |
 | [2](#2)  | local logging + traditional forwarding | i-uxs, i-sys                                | o-fc                  | f-udp                 |
