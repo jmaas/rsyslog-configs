@@ -29,50 +29,44 @@ Not yet supported.
 
 How does it work?
 =================
-The rsyslog configuration has been split into several files. Hopefuly, this makes it easy to just pick the components you need to implement your specific use-case. Just grab the ``.conf`` files you need and drop them into the appropiate location; the global configuration file (``rsyslog.conf``) should go into ``/etc/`` all other files should go into ``/etc/rsyslog.d/``. Make sure you first verify your configuration (``rsyslogd -N2``) before you reload/restart rsyslogd.
+The rsyslog configuration has been split into several files (snippets), each file providing a single type of functionality. Hopefuly, this model makes it easier to just pick the components you need to implement your specific use-case. Just grab the ``.conf`` files you need and drop them into the appropiate location; the global configuration file ``rsyslog.conf`` should go into ``/etc/`` all other files should go into ``/etc/rsyslog.d/``. Then you need to make sure the proper files are included in the right order (module->input->template->action). Make sure you also verify your configuration before you reload/restart rsyslogd by issuing the following command ``rsyslogd -N2``.
 
 *   rsyslog.conf - the global configuration file
 *   input_*.conf - input configuration files (receivers)
 *   output_*.conf - output configuration files (actions)
 *   forward_*.conf - forwarding configuration files
 
-Input
------
+Snippets
+--------
 
-*   journald - systemd's journal log
-*   syslog / relp - reliable log transfer protocol
-*   syslog / tcp - legacy syslog over tcp
-*   syslog / tls - syslog over tls tunnel
-*   syslog / udp - traditional syslog over udp
-*   uxsocket - unix domain socket, eg. ``/dev/log``
-
-Output
-------
-
-*   file_client - write log to local files, log split in multiple files based on facility
-*   file_server - write log to local files, log split in multiple files based on hostname/ip
-
-Forward
--------
-
-*   syslog / udp - traditional syslog forwarding
-*   syslog / tcp - improved syslog forwarding
-*   syslog / tls - secure syslog forwarding
-*   syslog / relp - secure and reliable syslog forwarding
+| Ref.      | Type      | Filename                     | Description                            |
+| :-------- | :---------| -----------------------------| :--------------------------------------|
+| i-uxs     | Input     | input_uxsocket.conf          | Traditional syslog socket              |
+| i-sys     | Input     | input_journald.conf          | Systemd's journal                      |
+| i-udp     | Input     | input_syslog_udp.conf        | Syslog over UDP                        |
+| i-tcp     | Input     | input_syslog_tcp.conf        | Syslog over TCP                        |
+| i-tls     | Input     | input_syslog_tls.conf        | Syslog over TLS                        |
+| i-relp    | Input     | input_syslog_relp.conf       | Syslog over RELP/TLS                   |
+| o-fc      | Output    | output_file_client.conf      | Split log based on facility            |
+| o-fs      | Output    | output_file_server.conf      | Split log based on date and hostname   |
+| f-udp     | Forward   | forward_syslog_udp.conf      | Syslog over UDP                        |
+| f-tcp     | Forward   | forward_syslog_tcp.conf      | Syslog over TCP                        |
+| f-tls     | Forward   | forward_syslog_tls.conf      | Syslog over TLS                        |
+| f-relp    | Forward   | forward_syslog_relp.conf     | Syslog over RELP/TLS                   |
 
 
-Use-cases
-=========
-Different use-cases can easily be implemented by combining several of the above configuration files. This section simply describes several example use-cases, and how to implement them using the provided configuration examples.
+Predefined use-cases
+--------------------
+This section simply describes several predefined (example) use-cases, and how to implement them using the provided configuration examples.
 
-| Use-case | Short description                      | Input                                                                 | Output                | Forward               |
-| :------- | :------------------------------------- | :---------------------------------------------------------------------| :-------------------- | :-------------------- |
-| [1](#1)  | local logging                          | journald, uxsocket                                                    | file_client           | n/a                   | 
-| [2](#2)  | local logging + traditional forwarding | journald, uxsocket                                                    | file_client           | syslog_udp            | 
-| [3](#3)  | local logging + improved forwarding    | journald, uxsocket                                                    | file_client           | syslog_tcp            | 
-| [4](#4)  | local logging + secure forwarding      | journald, uxsocket                                                    | file_client           | syslog_tls            | 
-| [5](#5)  | local logging + reliable forwarding    | journald, uxsocket                                                    | file_client           | syslog_relp           | 
-| [6](#6)  | log collector + reliable forwarding    | journald, uxsocket, syslog_udp, syslog_tcp, syslog_tls, syslog_relp   | n/a                   | syslog_relp           | 
+| Use-case | Short description                      | Input reference                             | Output reference      | Forward reference     |
+| :------- | :------------------------------------- | :-------------------------------------------| :-------------------- | :-------------------- |
+| [1](#1)  | local logging                          | i-uxs, i-sys                                | o-fc                  | n/a                   |
+| [2](#2)  | local logging + traditional forwarding | i-uxs, i-sys                                | o-fc                  | f-udp                 |
+| [3](#3)  | local logging + improved forwarding    | i-uxs, i-sys                                | o-fc                  | f-tcp                 |
+| [4](#4)  | local logging + secure forwarding      | i-uxs, i-sys                                | o-fc                  | f-tls                 |
+| [5](#5)  | local logging + reliable forwarding    | i-uxs, i-sys                                | o-fc                  | f-relp                |
+| [6](#6)  | log collector + reliable forwarding    | i-uxs, i-sys, i-udp, i-tcp, i-tls, i-relp   | n/a                   | f-relp                |
 
 
 <a name="1">
@@ -108,6 +102,46 @@ This use-case implements local logging with reliable forwarding (RELP over TLS).
 6. log collector + reliable forwarding
 --------------------------------------
 This use-case implements a log collector server which can receive syslog on UDP, TCP, TLS and RELP. Additionally it forwards all log to a central log server using RELP over TLS.
+
+
+Custom use-cases
+----------------
+The rsyslog configuration has been split into several files. Hopefuly, this makes it easy to just pick the components you need to implement your specific use-case. Just grab the ``.conf`` files you need and drop them into the appropiate location; the global configuration file (``rsyslog.conf``) should go into ``/etc/`` all other files should go into ``/etc/rsyslog.d/``. Make sure you first verify your configuration (``rsyslogd -N2``) before you reload/restart rsyslogd.
+
+*   rsyslog.conf - the global configuration file
+*   input_*.conf - input configuration files (receivers)
+*   output_*.conf - output configuration files (actions)
+*   forward_*.conf - forwarding configuration files
+
+Input
+-----
+
+| Ref.      | Filename                     | Description                    |
+| :-------- | :----------------------------| :------------------------------|
+| i-uxs     | input_uxsocket.conf          | Traditional syslog socket      |
+| i-sys     | input_journald.conf          | Systemd's journal              |
+| i-udp     | input_syslog_udp.conf        | Syslog over UDP                |
+| i-tcp     | input_syslog_tcp.conf        | Syslog over TCP                |
+| i-tls     | input_syslog_tls.conf        | Syslog over TLS                |
+| i-relp    | input_syslog_relp.conf       | Syslog over RELP/TLS           |
+
+Output
+------
+
+| Ref.    | Filename                     | Description                          |
+| :-------| :----------------------------| :------------------------------------|
+| o-fc    | output_file_client.conf      | Split log based on facility          |
+| o-fs    | output_file_server.conf      | Split log based on date and hostname |
+
+Forward
+-------
+
+| Ref.      | Filename                     | Description                    |
+| :-------- | :----------------------------| :------------------------------|
+| f-udp     | forward_syslog_udp.conf      | Syslog over UDP                |
+| f-tcp     | forward_syslog_tcp.conf      | Syslog over TCP                |
+| f-tls     | forward_syslog_tls.conf      | Syslog over TLS                |
+| f-relp    | forward_syslog_relp.conf     | Syslog over RELP/TLS           |
 
 
 Setting up TLS
