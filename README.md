@@ -47,6 +47,7 @@ Snippets
 | i-tcp     | Input     | input_syslog_tcp.conf        | Syslog over TCP                        |
 | i-tls     | Input     | input_syslog_tls.conf        | Syslog over TLS                        |
 | i-relp    | Input     | input_syslog_relp.conf       | Syslog over RELP/TLS                   |
+| o-fp      | Output    | output_pipe.conf             | Write log to a named pipe (fifo)       |
 | o-fc      | Output    | output_file_client.conf      | Split log based on facility            |
 | o-fs      | Output    | output_file_server.conf      | Split log based on date and hostname   |
 | f-udp     | Forward   | forward_syslog_udp.conf      | Syslog over UDP                        |
@@ -66,7 +67,8 @@ This section simply describes several predefined (example) use-cases, and how to
 | [3](#3)  | local logging + improved forwarding    | i-uxs, i-sys                                | o-fc                  | f-tcp                 |
 | [4](#4)  | local logging + secure forwarding      | i-uxs, i-sys                                | o-fc                  | f-tls                 |
 | [5](#5)  | local logging + reliable forwarding    | i-uxs, i-sys                                | o-fc                  | f-relp                |
-| [6](#6)  | log collector + reliable forwarding    | i-uxs, i-sys, i-udp, i-tcp, i-tls, i-relp   | n/a                   | f-relp                |
+| [6](#6)  | local logging + named pipe             | i-uxs, i-sys                                | o-fc, o-fp            | n/a                   |
+| [7](#7)  | log collector + reliable forwarding    | i-uxs, i-sys, i-udp, i-tcp, i-tls, i-relp   | n/a                   | f-relp                |
 
 
 <a name="1">
@@ -99,7 +101,13 @@ This use-case implements local logging with secure (TLS) forwarding. This method
 This use-case implements local logging with reliable forwarding (RELP over TLS). This method of forwarding is the most reliable in terms of log delivery (RELP) as well as confidentiality, integrity and authenticity (TLS). This is the recommended configuration when you need to forward logs to a central server.
 
 <a name="6">
-6. log collector + reliable forwarding
+6. local logging + named pipe
+-----------------------------
+This configuration gathers log from the systemd journal and the traditional syslog socket and writes it's output to local files and also to a named pipe (fifo). This configuration can be used when you need to send your local log to another process on the system, for instance a SIEM agent/collector. This is not a very reliable method for transfering log to another process.
+</a>
+
+<a name="7">
+7. log collector + reliable forwarding
 --------------------------------------
 This use-case implements a log collector server which can receive syslog on UDP, TCP, TLS and RELP. Additionally it forwards all log to a central log server using RELP over TLS.
 
