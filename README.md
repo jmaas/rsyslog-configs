@@ -1,5 +1,5 @@
-logmanagement-rsyslog
-=====================
+rsyslog-configs
+===============
 
 This repository contains rsyslog configuration files useful in many logmanagement environments. The goal is to have a set of easily reusable configuration files that are tested, proven and well documented. For these configurations to be really useful in real world environments sufficient attention to issues related to security (CIA triangle), reliability  and scalability has been given.
 
@@ -62,53 +62,41 @@ This section simply describes several predefined (example) use-cases, and how to
 
 | Use-case | Short description                      | Input                                       | Output                | Forward               |
 | :------- | :------------------------------------- | :-------------------------------------------| :-------------------- | :-------------------- |
-| [1](#1)  | local logging                          | i-uxs, i-sys                                | o-fc                  | n/a                   |
-| [2](#2)  | local logging + traditional forwarding | i-uxs, i-sys                                | o-fc                  | f-udp                 |
-| [3](#3)  | local logging + improved forwarding    | i-uxs, i-sys                                | o-fc                  | f-tcp                 |
-| [4](#4)  | local logging + secure forwarding      | i-uxs, i-sys                                | o-fc                  | f-tls                 |
-| [5](#5)  | local logging + reliable forwarding    | i-uxs, i-sys                                | o-fc                  | f-relp                |
-| [6](#6)  | local logging + named pipe             | i-uxs, i-sys                                | o-fc, o-fp            | n/a                   |
-| [7](#7)  | log collector + reliable forwarding    | i-uxs, i-sys, i-udp, i-tcp, i-tls, i-relp   | n/a                   | f-relp                |
+| [1]      | local logging                          | i-uxs, i-sys                                | o-fc                  | n/a                   |
+| [2]      | local logging + traditional forwarding | i-uxs, i-sys                                | o-fc                  | f-udp                 |
+| [3]      | local logging + improved forwarding    | i-uxs, i-sys                                | o-fc                  | f-tcp                 |
+| [4]      | local logging + secure forwarding      | i-uxs, i-sys                                | o-fc                  | f-tls                 |
+| [5]      | local logging + reliable forwarding    | i-uxs, i-sys                                | o-fc                  | f-relp                |
+| [6]      | local logging + named pipe             | i-uxs, i-sys                                | o-fc, o-fp            | n/a                   |
+| [7]      | log collector + reliable forwarding    | i-uxs, i-sys, i-udp, i-tcp, i-tls, i-relp   | n/a                   | f-relp                |
 
 
-<a name="1">
-1. local logging
-----------------
+Local logging (UC#1)
+--------------------
 This configuration gathers log from the systemd journal and the traditional syslog socket and writes it's output to local files only. This setup is most common for environments where central logging is not required (eg. your personal laptop).
-</a>
 
-<a name="2">
-2. local logging + traditional forwarding
------------------------------------------
+Local logging + traditional forwarding (UC#2)
+---------------------------------------------
 Like the first use-case but also sends it's log using the traditional syslog forwarding method (syslog over UDP). Forwarding syslog over UDP is the most unreliable forwarding method available. It's also the most common and best supported forwarding method, if your log server supports better protocols like TCP or TLS use that instead.
-</a>
 
-<a name="3">
-3. local logging + improved forwarding
---------------------------------------
+Local logging + improved forwarding (UC#3)
+------------------------------------------
 Like the previous use-case but using TCP as the forwarding protocol. This method has a higher level of reliability because rsyslog can now detect when the destination is unavailable. In this case log messages will be queued and resend when the destination becomes available again. Although a lot better than using UDP; but still there's no 100% guarentee that messages can't be lost.
-</a>
 
-<a name="4">
-4. local logging + secure forwarding
-------------------------------------
+Local logging + secure forwarding (UC#4)
+----------------------------------------
 This use-case implements local logging with secure (TLS) forwarding. This method of forwarding is pretty good when dealing with strict requirements regarding confidentiality, integrity and authenticity (CIA) of logs. Unfortunately this method does also suffer from the same limitations as the TCP forwarding use-case, there's still no guarantee that messages can't be lost.
-</a>
 
-<a name="5">
-5. local logging + reliable forwarding
---------------------------------------
+Local logging + reliable forwarding (UC#5)
+------------------------------------------
 This use-case implements local logging with reliable forwarding (RELP over TLS). This method of forwarding is the most reliable in terms of log delivery (RELP) as well as confidentiality, integrity and authenticity (TLS). This is the recommended configuration when you need to forward logs to a central server.
 
-<a name="6">
-6. local logging + named pipe
------------------------------
+Local logging + named pipe (UC#6)
+---------------------------------
 This configuration gathers log from the systemd journal and the traditional syslog socket and writes it's output to local files and also to a named pipe (fifo). This configuration can be used when you need to send your local log to another process on the system, for instance a SIEM agent/collector. This is not a very reliable method for transfering log to another process.
-</a>
 
-<a name="7">
-7. log collector + reliable forwarding
---------------------------------------
+Log collector + reliable forwarding (UC#7)
+------------------------------------------
 This use-case implements a log collector server which can receive syslog on UDP, TCP, TLS and RELP. Additionally it forwards all log to a central log server using RELP over TLS.
 
 
