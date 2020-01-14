@@ -97,7 +97,7 @@ This configuration gathers log from the systemd journal and the traditional sysl
 
 Log collector + reliable forwarding (UC#7)
 ------------------------------------------
-
+This use-case implements a log collector server which can receive syslog on UDP, TCP, TLS and RELP. Additionally it forwards all log to a central log server using RELP over TLS.
 
 Setting up TLS
 ==============
