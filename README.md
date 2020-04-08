@@ -132,4 +132,4 @@ The next step is to take the CSR and generate a signed certificate using the roo
 
 rsyslog TLS configuration
 -------------------------
-Now that you have the required certificates, you need to edit the global configuration file (``/etc/rsyslog.conf``) to adjust for the names & locations of your certificates.
+Now that you have the required certificates, you need to edit the global configuration file (``/etc/rsyslog.conf``) to enable the TLS settings and adjust for the names & locations of your certificates.
