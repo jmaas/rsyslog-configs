@@ -26,6 +26,8 @@ These configurations have only been tested with the stock rsyslog packages as pr
 ----------
 These configurations have only been tested with the stock rsyslog packages as provided with RHEL/CentOS 8.x. The use of the official distro packages is recommended since they are the most stable in regards to versioning and thus the configuration options. Tracking the upstream repo requires you to test your configuration as upstream keeps releasing new versions.
 
+Note: also tested on OpenBSD using rsyslog 8.2404.0 - not all features are available on OpenBSD
+
 
 How does it work?
 =================
